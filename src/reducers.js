@@ -417,8 +417,15 @@ export const initialState = movies;
 export const faver = (state = initialState, action)=>{
   switch (action.type) {
     case FAV:
+      // return Object.assign({}, state,{
+      //   fav: true
+      // });
       return Object.assign({}, state, {
-          "fav":true
+          results: state.results.map((item)=>{
+              return Object.assign({}, item, {
+                fav:true
+              })
+          })
         });
     case UNFAV:
       return Object.assign({}, state, {

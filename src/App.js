@@ -29,7 +29,7 @@ class FavButton extends React.Component {
         return (
           <div>
             <button onClick={()=>store.dispatch({
-                type: UNFAV
+                type: UNFAV,
               })} key={this.props.key}>REMOVE FROM FAV</button>
           </div>
         );
@@ -38,7 +38,8 @@ class FavButton extends React.Component {
       return (
         <div>
           <button onClick={()=>store.dispatch({
-              type: FAV
+              type: FAV,
+              button: this.props.key
             })} key={this.props.key}>ADD TO FAV</button>
           <button onClick={gs}>GET STATE</button>
         </div>

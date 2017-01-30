@@ -1,7 +1,7 @@
 export const FAV = 'FAV', UNFAV = 'UNFAV';
-export const fav = (fav) => {
-	{type: FAV, fav}
+export const fav = (button) => {
+	{type: FAV, button}
 };
-export const unFav = (unFav) => {
-	{type: UNFAV, unFav}
+export const unFav = (button) => {
+	{type: UNFAV, button}
 };
