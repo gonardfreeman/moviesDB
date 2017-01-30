@@ -1,69 +1,71 @@
 import React, { Component } from 'react';
 import Immutable from 'immutable';
+import { movies, unFavAll, initialState, faver } from './reducers'
+import { createStore } from 'Redux'
+import { FAV, UNFAV, fav, unFav } from './actions'
 
-var movies = Immutable.Map({
-    term1: {
-        name: 'Terminator',
-        img: 'https://upload.wikimedia.org/wikipedia/ru/thumb/d/da/T1_poster3.jpg/204px-T1_poster3.jpg',
-        descr: 'A seemingly indestructible humanoid cyborg is sent from 2029 to 1984 to assassinate a waitress'
-    },
-    term2: {
-        name: 'Terminator 2',
-        img: 'https://upload.wikimedia.org/wikipedia/en/8/85/Terminator2poster.jpg',
-        descr: 'A seemingly indestructible humanoid cyborg is sent from 2029 to 1984 to assassinate a waitress'
-    },
-    term3: {
-        name: 'Terminator 3',
-        img: 'https://my-hit.org/storage/240017_500x800x250.jpg',
-        descr: 'A seemingly indestructible humanoid cyborg is sent from 2029 to 1984 to assassinate a waitress'
-    },
-    term4: {
-        name: 'Terminator 4',
-        img: 'https://upload.wikimedia.org/wikipedia/ru/b/bf/Terminator_Salvation_poster.jpg',
-        descr: 'A seemingly indestructible humanoid cyborg is sent from 2029 to 1984 to assassinate a waitress'
-    }
-});
+
+export const store = createStore(faver);
 
 
 class Movies extends React.Component {
     render(){
-        return (
+      return (
             <div>
-                <div>{this.props.name}</div>
-                <div><img src={this.props.img} alt=""/></div>
-                <div>{this.props.descr}</div>
+                <div key={this.props.key}>{this.props.name}</div>
+                <div key={this.props.key}><img src={this.props.img} alt=""/></div>
+                <div key={this.props.key}>{this.props.descr}</div>
             </div>
         );
     }
 }
-
+var gs = ()=>{
+  console.log(store.getState());
+}
+class FavButton extends React.Component {
+  render() {
+    if(this.props.hasOwnProperty('fav') && this.props.fav == true){
+      store.subscribe(()=>store.getState());
+        return (
+          <div>
+            <button onClick={()=>store.dispatch({
+                type: UNFAV
+              })} key={this.props.key}>REMOVE FROM FAV</button>
+          </div>
+        );
+    }else{
+      store.subscribe(()=>store.getState());
+      return (
+        <div>
+          <button onClick={()=>store.dispatch({
+              type: FAV
+            })} key={this.props.key}>ADD TO FAV</button>
+          <button onClick={gs}>GET STATE</button>
+        </div>
+      );
+    }
+  }
+}
 
 
 export default class App extends Component {
   render(){
-      return (
-          <div>
-              <Movies
-                  name={movies.get('term1').name}
-                  img={movies.get('term1').img}
-                  decr={movies.get('term1').decsr}
-              />
-              <Movies
-                  name={movies.get('term2').name}
-                  img={movies.get('term2').img}
-                  decr={movies.get('term2').decsr}
-              />
-              <Movies
-                  name={movies.get('term3').name}
-                  img={movies.get('term3').img}
-                  decr={movies.get('term3').decsr}
-              />
-              <Movies
-                  name={movies.get('term4').name}
-                  img={movies.get('term4').img}
-                  decr={movies.get('term4').decsr}
-              />
-          </div>
-      );
+      const movs = store.getState().results.map((item, index)=>{
+          return (
+                <div>
+                  <Movies
+                      key={index}
+                      name={item.title}
+                      img={'https://image.tmdb.org/t/p/w300'+item.poster_path}
+                      descr={item.overview}
+                  />
+                  <FavButton
+                      key='fav'
+                      fav={item}
+                    />
+                </div>
+          );
+      });
+      return <div>{ movs }</div>
   }
 }
