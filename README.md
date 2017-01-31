@@ -8,10 +8,10 @@ This is app, built on react and redux.
 It calls to https://developers.themoviedb.org/3/
 and return list of popular movies.
 Also here will be available to search on https://themoviedb.org/ and
-some sort of favorites, that will store in users localStorage.
+some sort of favorites, that will stores in users localStorage.
 You may use and edit this app like you need and want, it's made only for tests.
-To corect usage of this app, you need to register on https://themoviedb.org/ and
-get ther API key, then put it in file apicalls.js(create it if need).
+To correct usage of this app, you need to register on https://themoviedb.org/ and
+get ther API key, then put it in file apicalls.js(create it if needed).
 
 
 React Hot Boilerplate
