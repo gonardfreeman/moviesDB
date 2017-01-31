@@ -82,9 +82,9 @@ const mapStateToProps = (state) => {
   return {state};
 };
 
-let unsubscribe = store.subscribe(() =>
-  console.log(store.getState())
-)
+// let unsubscribe = store.subscribe(() =>
+//   console.log(store.getState())
+// )
 let MovApp = connect(mapStateToProps)(MoviesApp);
 
 export default class App extends React.Component {
