@@ -1,5 +1,6 @@
 import { FAV, UNFAV, fav, unFav } from './actions'
 import Immutable from 'immutable';
+// import movies from './apicalls'
 
 export const movies = {
   "page": 1,
@@ -412,25 +413,43 @@ export const movies = {
   "total_results": 19652,
   "total_pages": 983
 }
-export const initialState = movies;
+
+
+export const initialState = Object.assign({}, movies, {
+    results: movies.results.map((item)=>{
+          return Object.assign({}, item, {
+            fav:false,
+            favText: 'Add to favorites'
+          })
+    })
+  });
 
 export const faver = (state = initialState, action)=>{
   switch (action.type) {
     case FAV:
-      // return Object.assign({}, state,{
-      //   fav: true
-      // });
       return Object.assign({}, state, {
           results: state.results.map((item)=>{
-              return Object.assign({}, item, {
-                fav:true
-              })
+              if(item.title === action.button){
+                return Object.assign({}, item, {
+                  fav:true,
+                  favText: 'Remove from favorites'
+                })
+              }
+              return item
           })
         });
     case UNFAV:
       return Object.assign({}, state, {
-        fav:true
-      });
+          results: state.results.map((item)=>{
+              if(item.title === action.button){
+                return Object.assign({}, item, {
+                  fav:false,
+                  favText: 'Add to favorites'
+                })
+              }
+              return item
+          })
+        });
     default:
       return state;
   }
