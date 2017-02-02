@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import Immutable from 'immutable';
-import { movies, unFavAll, initialState, faver } from './reducers'
-import { createStore } from 'redux'
-import { FAV, UNFAV, fav, unFav } from './actions'
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import rootReducer from './reducers'
+import { createStore, applyMiddleware } from 'redux'
+import fetchMovies, { FAV, UNFAV, fav, unFav } from './actions'
 import {Provider, connect} from 'react-redux';
 
-const store = createStore(faver);
+const loggerMiddleware = createLogger()
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware))
+store.dispatch(fetchMovies());
+
 //debug
 var gs = ()=>{
   console.log(store.getState());
@@ -13,7 +17,6 @@ var gs = ()=>{
 
 class FavButton extends React.Component {
   render() {
-    // console.log(this.props.fav);
     if(this.props.fav == true){
         return (
           <div>
@@ -57,11 +60,10 @@ class Movies extends React.Component {
     }
 }
 
-
 class MoviesApp extends React.Component {
   render(){
-    const movs = store.getState().results.map((item)=>{
-      // console.log(store.getState());
+    // console.log(store.getState());
+    const movs = store.getState().movies.popular.map((item)=>{
       return (
           <Movies
             key={item.title.toString()}
