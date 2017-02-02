@@ -8,7 +8,9 @@ import {Provider, connect} from 'react-redux';
 
 const loggerMiddleware = createLogger()
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware))
-store.dispatch(fetchMovies());
+// console.log(store.getState());
+
+store.dispatch(fetchMovies(store.getState().movies.current));
 
 //debug
 var gs = ()=>{
@@ -40,14 +42,41 @@ class FavButton extends React.Component {
     }
   }
 }
+class NextPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
 
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    store.dispatch(fetchMovies(this.state.value));
+    event.preventDefault();
+  }
+  render(){
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" placeholder={"from 1 to "+this.props.pages} value={this.state.value} onChange={this.handleChange}/>
+          <button type="submit">CLICK ME!</button>
+        </form>
+      </div>
+    )
+  }
+}
 
 
 class Movies extends React.Component {
     render(){
       return (
             <div key={this.props.key}>
-                <div>{this.props.name}</div>
+                <div className="title">{this.props.name}</div>
                 <div><img src={this.props.img} alt=""/></div>
                 <div>{this.props.descr}</div>
                   <FavButton
@@ -62,13 +91,12 @@ class Movies extends React.Component {
 
 class MoviesApp extends React.Component {
   render(){
-    // console.log(store.getState());
     const movs = store.getState().movies.popular.map((item)=>{
       return (
           <Movies
             key={item.title.toString()}
             name={item.title}
-            img={'https://image.tmdb.org/t/p/w300'+item.poster_path}
+            img={'https://image.tmdb.org/t/p/w500'+item.poster_path}
             descr={item.overview}
             fav={item.fav}
             text={item.title.toString()}
@@ -76,7 +104,15 @@ class MoviesApp extends React.Component {
             />
       );
     });
-    return <div>{ movs }</div>
+    // console.log(store.getState())
+    return (
+      <div>
+        <NextPage
+            pages={store.getState().movies.total}
+          />
+        <div className="parts">{ movs }</div>
+      </div>
+    );
   }
 }
 

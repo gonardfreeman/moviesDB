@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
-import { FAV, UNFAV, fav, unFav, RECIVE_MOVIES, UNFAV_ALL } from './actions'
+import { FAV, UNFAV, RECIVE_MOVIES, UNFAV_ALL, SELECT_PAGE, SET_TOTAL_PAGES } from './actions'
 
 
 function movies(state = {
+  current: 1,
+  total: 1,
   popular: [],
   search: []
 }, action){
@@ -15,6 +17,10 @@ function movies(state = {
             favText: 'Add to favorites'
           })
         })
+      })
+    case SELECT_PAGE:
+      return Object.assign({}, state, {
+        current: action.page
       })
     case FAV:
           return Object.assign({}, state, {
@@ -40,6 +46,10 @@ function movies(state = {
                   return item
               })
             });
+    case SET_TOTAL_PAGES:
+      return Object.assign({}, state,{
+        total:action.json
+      })
     default:
       return state;
 
