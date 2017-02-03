@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import rootReducer from './reducers'
-import { createStore, applyMiddleware } from 'redux'
-import fetchMovies, { FAV, UNFAV, fav, unFav } from './actions'
+import { createStore, applyMiddleware, bindActionCreators } from 'redux'
+import fetchMovies, { reciveMovies, FAV, UNFAV, fav, unFav } from './actions'
 import {Provider, connect} from 'react-redux';
+import { Router, Route, browserHistory } from 'react-router'
 
 const loggerMiddleware = createLogger()
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware))
 // console.log(store.getState());
 
-store.dispatch(fetchMovies(store.getState().movies.current));
+// store.dispatch(fetchMovies(store.getState().movies.current));
 
 //debug
 var gs = ()=>{
@@ -63,7 +64,7 @@ class NextPage extends React.Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" placeholder={"from 1 to "+this.props.pages} value={this.state.value} onChange={this.handleChange}/>
+          <input type="text" placeholder={"from 1 to "+this.props.pages+" at "+this.props.current} value={this.state.value} onChange={this.handleChange}/>
           <button type="submit">CLICK ME!</button>
         </form>
       </div>
@@ -90,6 +91,19 @@ class Movies extends React.Component {
 }
 
 class MoviesApp extends React.Component {
+  constructor(props){
+    super(props);
+    this.page = this.props.params.page;
+  }
+  checkType(page){
+    if(typeof page === 'undefined'){
+      return 1
+    }
+    return page
+  }
+  componentWillMount(){
+    store.dispatch(fetchMovies(this.checkType(this.page)));
+  }
   render(){
     const movs = store.getState().movies.popular.map((item)=>{
       return (
@@ -109,6 +123,7 @@ class MoviesApp extends React.Component {
       <div>
         <NextPage
             pages={store.getState().movies.total}
+            current={store.getState().movies.current}
           />
         <div className="parts">{ movs }</div>
       </div>
@@ -116,20 +131,28 @@ class MoviesApp extends React.Component {
   }
 }
 
+
 const mapStateToProps = (state) => {
-  return {state};
+  return {
+    state
+  };
 };
+
 
 // let unsubscribe = store.subscribe(() =>
 //   console.log(store.getState())
 // )
 let MovApp = connect(mapStateToProps)(MoviesApp);
 
+
 export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <MovApp />
+        <Router history={browserHistory}>
+          <Route path='/' component={MovApp} />
+          <Route path='/:page' component={MovApp} />
+        </Router>
       </Provider>
     )
   }

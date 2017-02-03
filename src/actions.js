@@ -23,7 +23,7 @@ function setTotalPages(json){
 	}
 }
 
-function reciveMovies(page,json) {
+export function reciveMovies(page,json) {
   return {
     type: RECIVE_MOVIES,
 		page,
