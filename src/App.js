@@ -9,9 +9,6 @@ import { Router, Route, browserHistory } from 'react-router'
 
 const loggerMiddleware = createLogger()
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware))
-// console.log(store.getState());
-
-// store.dispatch(fetchMovies(store.getState().movies.current));
 
 //debug
 var gs = ()=>{
@@ -72,6 +69,38 @@ class NextPage extends React.Component {
   }
 }
 
+class Paginator extends React.Component {
+  componentDidMount(){
+    return (
+      <div>
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+        </ul>
+        <div>...</div>
+        <ul>
+          <li>{this.props.total - 2}</li>
+          <li>{this.props.total - 1}</li>
+          <li>{this.props.total}</li>
+        </ul>
+      </div>
+    );
+  }
+  render() {
+    // if(this.current <= 2){
+    //
+    // }else if (this.current <= this.total - 2) {
+    //
+    // }else{
+    //
+    // }
+    console.log(this.props.total)
+    return (
+      <div>{this.componentDidMount()}</div>
+    );
+  }
+}
 
 class Movies extends React.Component {
     render(){
@@ -101,7 +130,7 @@ class MoviesApp extends React.Component {
     }
     return page
   }
-  componentWillMount(){
+  componentDidMount(){
     store.dispatch(fetchMovies(this.checkType(this.page)));
   }
   render(){
@@ -116,16 +145,21 @@ class MoviesApp extends React.Component {
             text={item.title.toString()}
             favText={item.favText}
             />
+
       );
     });
-    // console.log(store.getState())
     return (
       <div>
+
         <NextPage
             pages={store.getState().movies.total}
             current={store.getState().movies.current}
           />
         <div className="parts">{ movs }</div>
+          <Paginator
+            current={store.getState().movies.current}
+            total={store.getState().movies.total}
+            />
       </div>
     );
   }
