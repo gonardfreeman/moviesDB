@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
+import { routerMiddleware, push } from 'react-router-redux'
 import rootReducer from './reducers'
 import { createStore, applyMiddleware, bindActionCreators } from 'redux'
 import fetchMovies, { reciveMovies, FAV, UNFAV, fav, unFav } from './actions'
 import {Provider, connect} from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, Link, Redirect, browserHistory } from 'react-router'
+import styles from './index.css'
+
 
 const loggerMiddleware = createLogger()
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware))
+const middleware = routerMiddleware(browserHistory)
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware,middleware,loggerMiddleware))
 
 //debug
 var gs = ()=>{
@@ -68,34 +72,80 @@ class NextPage extends React.Component {
     )
   }
 }
-
 class Paginator extends React.Component {
   componentDidMount(){
-    return (
-      <div>
-        <ul>
-          <li>1</li>
-          <li>2</li>
-          <li>3</li>
-        </ul>
-        <div>...</div>
-        <ul>
-          <li>{this.props.total - 2}</li>
-          <li>{this.props.total - 1}</li>
-          <li>{this.props.total}</li>
-        </ul>
-      </div>
-    );
+    if(parseInt(this.props.current) <= 2 || parseInt(this.props.current) >= parseInt(this.props.total)-1){
+      return (
+      <div className={styles.paginator}>
+        <div>
+          <ul className={styles.paginator__ul}>
+            <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
+            <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
+            <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
+          </ul>
+        </div>
+          <div>...</div>
+          <div>
+          <ul className={styles.paginator__ul}>
+            <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
+            <li><a href={this.props.total - 1} onClick={()=>browserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
+            <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
+          </ul>
+        </div>
+        </div>
+      );
+    }else if (parseInt(this.props.current) >= parseInt(this.props.total)-1) {
+      return (
+      <div className={styles.paginator}>
+        <div>
+          <ul className={styles.paginator__ul}>
+            <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
+            <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
+            <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
+          </ul>
+        </div>
+          <div>...</div>
+          <div>
+          <ul className={styles.paginator__ul}>
+            <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
+            <li><a href={this.props.total - 1} onClick={()=>browserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
+            <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
+          </ul>
+        </div>
+        </div>
+      );
+    }else{
+      let prev = parseInt(this.props.current) - 1, next = parseInt(this.props.current)+1;
+      return(
+        <div className={styles.paginator}>
+          <div>
+            <ul className={styles.paginator__ul}>
+              <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
+              <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
+              <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
+            </ul>
+          </div>
+            <div>...</div>
+          <div>
+            <ul className={styles.paginator__ul}>
+              <li><a href={prev} onClick={()=>browserHistory.push('/'+prev)}>{prev}</a></li>
+              <li><a href={this.props.current} onClick={()=>browserHistory.push('/'+this.props.current)}>{this.props.current}</a></li>
+              <li><a href={next} onClick={()=>browserHistory.push('/'+next)}>{next}</a></li>
+            </ul>
+          </div>
+            <div>...</div>
+            <div>
+            <ul className={styles.paginator__ul}>
+              <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
+              <li><a href={this.props.total - 1} onClick={()=>sbrowserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
+              <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
+            </ul>
+          </div>
+          </div>
+      );
+    }
   }
   render() {
-    // if(this.current <= 2){
-    //
-    // }else if (this.current <= this.total - 2) {
-    //
-    // }else{
-    //
-    // }
-    console.log(this.props.total)
     return (
       <div>{this.componentDidMount()}</div>
     );
@@ -106,7 +156,7 @@ class Movies extends React.Component {
     render(){
       return (
             <div key={this.props.key}>
-                <div className="title">{this.props.name}</div>
+                <div className={styles.title}>{this.props.name}</div>
                 <div><img src={this.props.img} alt=""/></div>
                 <div>{this.props.descr}</div>
                   <FavButton
@@ -150,23 +200,22 @@ class MoviesApp extends React.Component {
     });
     return (
       <div>
-
+        <Paginator
+          current={store.getState().movies.current}
+          total={store.getState().movies.total}
+          />
         <NextPage
             pages={store.getState().movies.total}
             current={store.getState().movies.current}
           />
-        <div className="parts">{ movs }</div>
-          <Paginator
-            current={store.getState().movies.current}
-            total={store.getState().movies.total}
-            />
+        <div className={styles.parts}>{ movs }</div>
       </div>
     );
   }
 }
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     state
   };
@@ -184,8 +233,9 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <Router history={browserHistory}>
-          <Route path='/' component={MovApp} />
-          <Route path='/:page' component={MovApp} />
+          <Route path='/' component={MovApp}>
+            <Route path='/:page' component={MovApp}/>
+          </Route>
         </Router>
       </Provider>
     )

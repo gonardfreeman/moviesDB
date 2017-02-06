@@ -1,0 +1,22 @@
+
+.parts > div{
+  display: inline-block;
+  vertical-align: top;
+  width: calc(100% / 2 - 20px);
+  margin-bottom: 20px;
+}
+.parts > div:nth-child(odd){
+  margin-right: 20px;
+}
+.title{
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.paginator .paginator__ul{
+  display: block;
+  padding: 0 5px 0 5px;
+}
+.paginator > div, .paginator__ul > li {
+  display: inline-block;
+  padding: 0 5px 0 5px;
+}
