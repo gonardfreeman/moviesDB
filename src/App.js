@@ -127,10 +127,6 @@ class MoviesApp extends React.Component {
           current={store.getState().movies.current}
           total={store.getState().movies.total}
           />
-        <NextPage
-            pages={store.getState().movies.total}
-            current={store.getState().movies.current}
-          />
         <div className={styles.parts}>{ movs }</div>
       </div>
     );

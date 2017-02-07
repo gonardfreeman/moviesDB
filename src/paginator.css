@@ -1,0 +1,14 @@
+.paginator__center{
+  max-width: 400px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.paginator .paginator__ul{
+  display: block;
+  padding: 0 5px 0 5px;
+}
+.paginator > div, .paginator__ul > li {
+  display: inline-block;
+  padding: 0 5px 0 5px;
+}

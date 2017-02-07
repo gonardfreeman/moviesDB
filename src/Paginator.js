@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-import styles from './index.css'
+import styles from './paginator.css'
 
 
 function PageItem(props) {
@@ -29,7 +29,7 @@ class Paginator extends React.Component {
     if(current > 4) mPages = [...1,current-1,current,current+1]
     if(current >= total-3) mPages = [...1,total-5,total-4,total-3]
       return (
-        <div className={styles.paginator}>
+        <div className={styles.paginator+' '+styles.paginator__center}>
           <div>
             <Pages
               pages={[1,2,3]}
