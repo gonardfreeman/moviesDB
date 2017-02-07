@@ -72,82 +72,55 @@ class NextPage extends React.Component {
     )
   }
 }
-class Paginator extends React.Component {
-  componentDidMount(){
-    if(parseInt(this.props.current) <= 2 || parseInt(this.props.current) >= parseInt(this.props.total)-1){
-      return (
-      <div className={styles.paginator}>
-        <div>
-          <ul className={styles.paginator__ul}>
-            <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
-            <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
-            <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
-          </ul>
-        </div>
-          <div>...</div>
-          <div>
-          <ul className={styles.paginator__ul}>
-            <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
-            <li><a href={this.props.total - 1} onClick={()=>browserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
-            <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
-          </ul>
-        </div>
-        </div>
-      );
-    }else if (parseInt(this.props.current) >= parseInt(this.props.total)-1) {
-      return (
-      <div className={styles.paginator}>
-        <div>
-          <ul className={styles.paginator__ul}>
-            <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
-            <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
-            <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
-          </ul>
-        </div>
-          <div>...</div>
-          <div>
-          <ul className={styles.paginator__ul}>
-            <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
-            <li><a href={this.props.total - 1} onClick={()=>browserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
-            <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
-          </ul>
-        </div>
-        </div>
-      );
-    }else{
-      let prev = parseInt(this.props.current) - 1, next = parseInt(this.props.current)+1;
+function PageItem(props) {
+  return <li><Link to={props.value.toString()} onClick={()=>this.props.router.push(props.value)}>{props.value}</Link></li>;
+}
+class Pages extends React.Component{
+  render(){
+    const pages = this.props.pages.map((item, index)=>{
       return(
-        <div className={styles.paginator}>
-          <div>
-            <ul className={styles.paginator__ul}>
-              <li><a href="/1" onClick={()=>browserHistory.push('/1')}>1</a></li>
-              <li><a href="/2" onClick={()=>browserHistory.push('/2')}>2</a></li>
-              <li><a href="/3" onClick={()=>browserHistory.push('/3')}>3</a></li>
-            </ul>
-          </div>
-            <div>...</div>
-          <div>
-            <ul className={styles.paginator__ul}>
-              <li><a href={prev} onClick={()=>browserHistory.push('/'+prev)}>{prev}</a></li>
-              <li><a href={this.props.current} onClick={()=>browserHistory.push('/'+this.props.current)}>{this.props.current}</a></li>
-              <li><a href={next} onClick={()=>browserHistory.push('/'+next)}>{next}</a></li>
-            </ul>
-          </div>
-            <div>...</div>
-            <div>
-            <ul className={styles.paginator__ul}>
-              <li><a href={this.props.total - 2} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total - 2}</a></li>
-              <li><a href={this.props.total - 1} onClick={()=>sbrowserHistory.push('/'+this.props.total - 1)}>{this.props.total - 1}</a></li>
-              <li><a href={this.props.total} onClick={()=>browserHistory.push('/'+this.props.total)}>{this.props.total}</a></li>
-            </ul>
-          </div>
-          </div>
+        <PageItem
+          key={"page "+index}
+          value={item}
+          />
       );
-    }
+    })
+    return(
+      <ul className={styles.paginator__ul}>{pages}</ul>
+    );
+
+        // <li><Link to={this.props.page} onClick={()=>this.props.router.push(this.props.page)}>{fPart}</Link></li>
+        // <li><Link to={this.props.page+1} onClick={()=>this.props.router.push(this.props.page+1)}>{fPart+1}</Link></li>
+        // <li><Link to={fPart+2} onClick={()=>this.props.router.push('/3')}>{fPart+2}</Link></li>
+
+  }
+}
+class Paginator extends React.Component {
+  constructor(props){
+    super(props);
+    // this.crPages = this.crPages.bind(this);
   }
   render() {
     return (
-      <div>{this.componentDidMount()}</div>
+      <div className={styles.paginator}>
+        <div>
+          <Pages
+            pages={[1,2,3]}
+            />
+        </div>
+        <div>...</div>
+          <div>
+            <Pages
+              pages={[98,99,100]}
+              />
+          </div>
+          <div>...</div>
+            <div>
+              <Pages
+                pages={[976,977,978]}
+                />
+            </div>
+        </div>
     );
   }
 }
