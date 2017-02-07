@@ -8,6 +8,7 @@ import fetchMovies, { reciveMovies, FAV, UNFAV, fav, unFav } from './actions'
 import {Provider, connect} from 'react-redux';
 import { Router, Route, Link, Redirect, browserHistory } from 'react-router'
 import styles from './index.css'
+import  Paginator from './Paginator'
 
 
 const loggerMiddleware = createLogger()
@@ -72,58 +73,7 @@ class NextPage extends React.Component {
     )
   }
 }
-function PageItem(props) {
-  return <li><Link to={props.value.toString()} onClick={()=>this.props.router.push(props.value)}>{props.value}</Link></li>;
-}
-class Pages extends React.Component{
-  render(){
-    const pages = this.props.pages.map((item, index)=>{
-      return(
-        <PageItem
-          key={"page "+index}
-          value={item}
-          />
-      );
-    })
-    return(
-      <ul className={styles.paginator__ul}>{pages}</ul>
-    );
 
-        // <li><Link to={this.props.page} onClick={()=>this.props.router.push(this.props.page)}>{fPart}</Link></li>
-        // <li><Link to={this.props.page+1} onClick={()=>this.props.router.push(this.props.page+1)}>{fPart+1}</Link></li>
-        // <li><Link to={fPart+2} onClick={()=>this.props.router.push('/3')}>{fPart+2}</Link></li>
-
-  }
-}
-class Paginator extends React.Component {
-  constructor(props){
-    super(props);
-    // this.crPages = this.crPages.bind(this);
-  }
-  render() {
-    return (
-      <div className={styles.paginator}>
-        <div>
-          <Pages
-            pages={[1,2,3]}
-            />
-        </div>
-        <div>...</div>
-          <div>
-            <Pages
-              pages={[98,99,100]}
-              />
-          </div>
-          <div>...</div>
-            <div>
-              <Pages
-                pages={[976,977,978]}
-                />
-            </div>
-        </div>
-    );
-  }
-}
 
 class Movies extends React.Component {
     render(){
