@@ -15,14 +15,18 @@ function selectPage(page){
 		page
 	}
 }
-
 function setTotalPages(json){
 	return {
 		type: SET_TOTAL_PAGES,
 		json
 	}
 }
-
+export const changeVisFilter = (filter)=>{
+	return {
+		type: 'SET_VISIBILITY_FILTER',
+		filter
+	}
+}
 export function reciveMovies(page,json) {
   return {
     type: RECIVE_MOVIES,

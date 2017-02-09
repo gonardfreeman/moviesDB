@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { FAV, UNFAV, RECIVE_MOVIES, UNFAV_ALL, SELECT_PAGE, SET_TOTAL_PAGES } from './actions'
+import { FAV, UNFAV, RECIVE_MOVIES, UNFAV_ALL, SELECT_PAGE, SET_TOTAL_PAGES, changeVisFilter } from './actions'
 
 
 function movies(state = {
@@ -12,10 +12,7 @@ function movies(state = {
     case RECIVE_MOVIES:
       return Object.assign({}, state, {
         popular: action.json.map((item)=>{
-          return Object.assign({}, item, {
-            fav: false,
-            favText: 'Add to favorites'
-          })
+          return {...item, fav: false,favText: 'Add to favorites'}
         })
       })
     case SELECT_PAGE:
@@ -26,10 +23,10 @@ function movies(state = {
           return Object.assign({}, state, {
               popular: state.popular.map((item)=>{
                   if(item.title === action.button){
-                    return Object.assign({}, item, {
+                    return {...item,
                       fav:true,
                       favText: 'Remove from favorites'
-                    })
+                    }
                   }
                   return item
               })
@@ -38,10 +35,10 @@ function movies(state = {
           return Object.assign({}, state, {
               popular: state.popular.map((item)=>{
                   if(item.title === action.button){
-                    return Object.assign({}, item, {
+                    return {...item,
                       fav:false,
                       favText: 'Add to favorites'
-                    })
+                    }
                   }
                   return item
               })
@@ -56,19 +53,20 @@ function movies(state = {
   }
 }
 
-// export const faver = (state = {
-//   popular: [],
-//   search: []
-// }, action)=>{
-//
-//     default:
-//       return state;
-//   }
-// }
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter
+    default:
+      return state
+
+  }
+}
+
 
 const rootReducer = combineReducers({
   movies,
-  // faver
+  visibilityFilter
 })
 
 export default rootReducer;
