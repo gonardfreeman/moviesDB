@@ -92,7 +92,7 @@ class MoviesApp extends React.Component {
   }
   componentDidMount(){
     store.dispatch(fetchMovies(this.checkType(this.page)));
-    store.dispatch(changeVisFilter('SHOW_ALL'))
+
   }
   render(){
     const movs = store.getState().movies.popular.map((item)=>{
@@ -119,24 +119,26 @@ class MoviesApp extends React.Component {
   }
 }
 
-const getFavMovies = (popular, filter) => {
+const getFavMovies = (favorites, filter) => {
   switch (filter) {
     case 'SHOW_ALL':
-      return popular
+      return favorites
     case 'SHOW_FAV':
-      return popular.filter(p => p.fav)
+      // console.log(favorites.filter(p => !p.fav))
+      return favorites.filter(p => p.fav)
+
+
   }
 }
 
 const mapStateToProps = (state) => {
-  return {
-    popular: getFavMovies(state, state.visibilityFilter)
-    // state
-  };
+    return {
+    state: getFavMovies(state.movies.popular, state.visibilityFilter)
+  }
 };
 
 
-let MovApp = connect(mapStateToProps)(MoviesApp);
+const MovApp = connect(mapStateToProps)(MoviesApp);
 
 
 export default class App extends React.Component {
@@ -144,7 +146,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <Router history={browserHistory}>
-          <Route path='/(:filter)' component={MovApp}>
+          <Route path='/' component={MovApp}>
             <Route path='/:page' component={MovApp}/>
           </Route>
         </Router>

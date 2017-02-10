@@ -46,6 +46,7 @@ export default function fetchMovies(page){
       .then(response=>{
 				dispatch(reciveMovies(page,response));
 				dispatch(setTotalPages(response.total_pages));
+				dispatch(changeVisFilter('SHOW_FAV'))
 			})
   }
 }
